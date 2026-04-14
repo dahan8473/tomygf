@@ -25,12 +25,10 @@ const LIVES = [
     bg: '#ffffff',
     bgPulse: '#fff5f7',
     flash: 'rgba(255, 150, 180, 0.4)',
-    letter: `Dear [Name],<br><br>
-      Happy anniversary! This is a placeholder for your heartfelt message.
-      Replace this text with whatever you want to say.<br><br>
-      Every moment with you is my favorite moment.<br><br>
-      Love always,<br>
-      [Your Name]`,
+    letter: `Dear Alice,<br><br>
+      If I had 100 more lives, I'd always choose the one with you.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
   },
   {
     left: '/assets/dog-left.png',
@@ -42,12 +40,10 @@ const LIVES = [
     bg: '#f5efe6',
     bgPulse: '#f0e5d3',
     flash: 'rgba(255, 200, 120, 0.4)',
-    letter: `Dear [Name],<br><br>
-      In this life we had four paws and the purest hearts.<br>
-      We didn't need words. A tail wag said everything.<br><br>
-      I'd find you in every dog park, in every life.<br><br>
-      Woof always,<br>
-      [Your Name]`,
+    letter: `Dear Alice,<br><br>
+      If I was a dog, I'd follow you everywhere.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
   },
   {
     left: '/assets/pibble1.png',
@@ -59,12 +55,10 @@ const LIVES = [
     bg: '#f7f0f5',
     bgPulse: '#f0e0ec',
     flash: 'rgba(200, 150, 180, 0.4)',
-    letter: `Dear [Name],<br><br>
-      In this life we were the squishiest pibbles.<br>
-      Wrinkly faces, tiny paws, one shared brain cell.<br><br>
-      I'd still choose you. Every nap, every zoomie, every life.<br><br>
-      Bork bork,<br>
-      [Your Name]`,
+    letter: `Dear Alice,<br><br>
+      Whatever our souls are made of, yours and mine are the same.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
   },
   {
     left: '/assets/cat1.png',
@@ -75,12 +69,10 @@ const LIVES = [
     bg: '#fff8f0',
     bgPulse: '#ffe8d6',
     flash: 'rgba(255, 180, 100, 0.4)',
-    letter: `Dear [Name],<br><br>
-      In this life I brought you flowers.<br>
-      You reached out for me anyway.<br><br>
-      Even as cats, I'd choose you over the red dot. Every time.<br><br>
-      Meow always,<br>
-      [Your Name]`,
+    letter: `Dear Alice,<br><br>
+      If I had 9 lives, I'd spend all 9 with you.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
   },
 ]
 
