@@ -41,7 +41,7 @@ const LIVES = [
     bgPulse: '#f0e5d3',
     flash: 'rgba(255, 200, 120, 0.4)',
     letter: `Dear Alice,<br><br>
-      If I was a dog, I'd follow you everywhere.<br><br>
+      Grow old along with me, the best is yet to be!!<br><br>
       Happy 1 Year Anniversary!!<br><br>
       From David`,
   },
