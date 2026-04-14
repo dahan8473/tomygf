@@ -7,12 +7,12 @@ const letterContent = document.getElementById('letter-content')
 const openBtn = document.getElementById('open-btn')
 const nextLifeBtn = document.getElementById('next-life-btn')
 const lifeLabel = document.getElementById('life-label')
-const titleEl = document.getElementById('title')
+const letterText = document.getElementById('letter-text')
 
 const PROXIMITY_THRESHOLD = 160
-const HEART_EMOJIS = ['❤️', '💕', '💗', '💖', '💘', '💝', '💞', '🩷', '😘', '🥰']
 
 // --- Lives ---
+// Each life has its own images, emojis, background, and letter
 
 const LIVES = [
   {
@@ -20,16 +20,37 @@ const LIVES = [
     right: '/assets/garu.png',
     label: 'This Life',
     era: 'Now',
+    emojis: ['❤️', '💕', '💗', '💖', '💘', '💝', '💞', '🩷', '😘', '🥰'],
+    bg: '#ffffff',
+    bgPulse: '#fff5f7',
+    flash: 'rgba(255, 150, 180, 0.4)',
+    letter: `Dear [Name],<br><br>
+      Happy anniversary! This is a placeholder for your heartfelt message.
+      Replace this text with whatever you want to say.<br><br>
+      Every moment with you is my favorite moment.<br><br>
+      Love always,<br>
+      [Your Name]`,
   },
   {
     left: '/assets/dog-left.png',
     right: '/assets/dog-right.png',
     label: 'Life #12',
     era: 'The Goodest Timeline',
+    emojis: ['🐶', '🐾', '🦴', '🐕', '❤️', '💕', '🐩', '🐕‍🦺', '🥺', '🐾'],
+    bg: '#fffdf7',
+    bgPulse: '#fef3e2',
+    flash: 'rgba(255, 200, 120, 0.4)',
+    letter: `Dear [Name],<br><br>
+      In this life we had four paws and the purest hearts.<br>
+      We didn't need words. A tail wag said everything.<br><br>
+      I'd find you in every dog park, in every life.<br><br>
+      Woof always,<br>
+      [Your Name]`,
   },
 ]
 
 let currentLifeIndex = -1
+let currentLife = null
 let heartInterval = null
 let letterShown = false
 let isClose = false
@@ -48,13 +69,14 @@ function pickRandomLife() {
 }
 
 function loadLife(life) {
+  currentLife = life
+
   // Reset state
   stopHearts()
   isClose = false
   letterShown = false
   letterOverlay.classList.add('hidden')
   heartsContainer.innerHTML = ''
-  document.body.classList.remove('love-mode')
   charLeft.classList.remove('excited')
   charRight.classList.remove('excited')
 
@@ -69,6 +91,16 @@ function loadLife(life) {
   // Set label
   lifeLabel.textContent = life.label
   lifeLabel.dataset.era = life.era
+
+  // Set background
+  document.body.style.backgroundColor = life.bg
+  document.body.classList.remove('love-mode')
+  document.documentElement.style.setProperty('--bg', life.bg)
+  document.documentElement.style.setProperty('--bg-pulse', life.bgPulse)
+  document.documentElement.style.setProperty('--flash-color', life.flash)
+
+  // Set letter text
+  letterText.innerHTML = life.letter
 
   // Reset positions
   charLeft.style.cssText = ''
@@ -87,6 +119,11 @@ function loadLife(life) {
   // Make draggable
   makeDraggable(charLeft)
   makeDraggable(charRight)
+}
+
+function getEmoji() {
+  const emojis = currentLife ? currentLife.emojis : ['❤️']
+  return emojis[Math.floor(Math.random() * emojis.length)]
 }
 
 // --- Drag & Drop ---
@@ -229,7 +266,7 @@ function explodeHearts(cx, cy) {
       heart.style.left = cx + 'px'
       heart.style.top = cy + 'px'
       heart.style.fontSize = (20 + Math.random() * 28) + 'px'
-      heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+      heart.textContent = getEmoji()
 
       heartsContainer.appendChild(heart)
       heart.addEventListener('animationend', () => heart.remove())
@@ -249,7 +286,7 @@ function screenFlash() {
 function spawnHeart(cx, cy, type) {
   const heart = document.createElement('div')
   heart.className = 'heart ' + type
-  heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+  heart.textContent = getEmoji()
 
   const spread = 100
   heart.style.left = (cx + (Math.random() - 0.5) * spread) + 'px'
@@ -268,7 +305,7 @@ function startHeartRain() {
     if (!isClose) return
     const heart = document.createElement('div')
     heart.className = 'heart rain'
-    heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+    heart.textContent = getEmoji()
     heart.style.left = (Math.random() * window.innerWidth) + 'px'
     heart.style.top = '-30px'
     heart.style.fontSize = (14 + Math.random() * 24) + 'px'
@@ -305,7 +342,6 @@ openBtn.addEventListener('click', () => {
 nextLifeBtn.addEventListener('click', () => {
   letterOverlay.classList.add('hidden')
   stopHearts()
-  // Fade out, switch life, fade in
   document.getElementById('stage').style.opacity = '0'
   setTimeout(() => {
     loadLife(pickRandomLife())
