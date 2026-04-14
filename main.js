@@ -37,8 +37,8 @@ const LIVES = [
     label: 'Life #12',
     era: 'The Goodest Timeline',
     emojis: ['🐶', '🐾', '🦴', '🐕', '❤️', '💕', '🐩', '🐕‍🦺', '🥺', '🐾'],
-    bg: '#fffdf7',
-    bgPulse: '#fef3e2',
+    bg: '#f5efe6',
+    bgPulse: '#f0e5d3',
     flash: 'rgba(255, 200, 120, 0.4)',
     letter: `Dear [Name],<br><br>
       In this life we had four paws and the purest hearts.<br>
