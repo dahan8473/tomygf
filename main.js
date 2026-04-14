@@ -51,6 +51,24 @@ const LIVES = [
       Woof always,<br>
       [Your Name]`,
   },
+  {
+    left: '/assets/pibble1.png',
+    right: '/assets/pibble2.png',
+    label: 'Life #7',
+    era: 'If We Were Pibbles',
+    flipLeft: false,
+    flipRight: true,
+    emojis: ['🐶', '🐾', '💖', '🥺', '😭', '❤️', '🫶', '💕', '🐕', '😍'],
+    bg: '#f7f0f5',
+    bgPulse: '#f0e0ec',
+    flash: 'rgba(200, 150, 180, 0.4)',
+    letter: `Dear [Name],<br><br>
+      In this life we were the squishiest pibbles.<br>
+      Wrinkly faces, tiny paws, one shared brain cell.<br><br>
+      I'd still choose you. Every nap, every zoomie, every life.<br><br>
+      Bork bork,<br>
+      [Your Name]`,
+  },
 ]
 
 let currentLifeIndex = -1
