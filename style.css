@@ -112,14 +112,14 @@ html, body {
 
 #char-left {
   top: 50%;
-  left: 15%;
+  left: 5%;
   transform: translateY(-50%);
   animation-delay: 0s;
 }
 
 #char-right {
   top: 50%;
-  right: 15%;
+  right: 5%;
   transform: translateY(-50%);
   animation-delay: 0.8s;
 }

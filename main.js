@@ -20,6 +20,8 @@ const LIVES = [
     right: '/assets/garu.png',
     label: 'This Life',
     era: 'Now',
+    flipLeft: false,
+    flipRight: false,
     emojis: ['❤️', '💕', '💗', '💖', '💘', '💝', '💞', '🩷', '😘', '🥰'],
     bg: '#ffffff',
     bgPulse: '#fff5f7',
@@ -36,6 +38,8 @@ const LIVES = [
     right: '/assets/dog-right.png',
     label: 'Life #12',
     era: 'The Goodest Timeline',
+    flipLeft: false,
+    flipRight: true,
     emojis: ['🐶', '🐾', '🦴', '🐕', '❤️', '💕', '🐩', '🐕‍🦺', '🥺', '🐾'],
     bg: '#f5efe6',
     bgPulse: '#f0e5d3',
@@ -84,9 +88,9 @@ function loadLife(life) {
   dragCleanups.forEach(fn => fn())
   dragCleanups = []
 
-  // Set characters
-  charLeft.innerHTML = `<img src="${life.left}" alt="Left" draggable="false" />`
-  charRight.innerHTML = `<img src="${life.right}" alt="Right" draggable="false" />`
+  // Set characters with facing direction
+  charLeft.innerHTML = `<img src="${life.left}" alt="Left" draggable="false" style="${life.flipLeft ? 'transform: scaleX(-1)' : ''}" />`
+  charRight.innerHTML = `<img src="${life.right}" alt="Right" draggable="false" style="${life.flipRight ? 'transform: scaleX(-1)' : ''}" />`
 
   // Set label
   lifeLabel.textContent = life.label
