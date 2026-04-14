@@ -9,7 +9,7 @@ const nextLifeBtn = document.getElementById('next-life-btn')
 const lifeLabel = document.getElementById('life-label')
 const letterText = document.getElementById('letter-text')
 
-const PROXIMITY_THRESHOLD = 160
+const PROXIMITY_THRESHOLD = Math.min(160, window.innerWidth * 0.15)
 
 // --- Lives ---
 // Each life has its own images, emojis, background, and letter
@@ -205,7 +205,7 @@ function loadLife(life) {
   // Fixed right character (candle): center-right, no cursor change
   if (life.rightFixed) {
     charRight.style.cursor = 'default'
-    charRight.style.right = '30%'
+    charRight.style.right = '10%'
   } else {
     charRight.style.cursor = 'grab'
   }
