@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>For You</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="stage">
+    <img
+      id="pucca"
+      class="character"
+      src="/assets/pucca.png"
+      alt="Pucca"
+      draggable="false"
+    />
+    <img
+      id="garu"
+      class="character"
+      src="/assets/garu.png"
+      alt="Garu"
+      draggable="false"
+    />
+  </div>
+
+  <div id="hearts-container"></div>
+
+  <div id="letter-overlay" class="hidden">
+    <div id="envelope">
+      <div id="envelope-front">
+        <div id="heart-seal">&#10084;</div>
+        <button id="open-btn">Open Me</button>
+      </div>
+      <div id="letter-content" class="hidden">
+        <p id="letter-text">
+          Dear [Name],<br /><br />
+          Happy anniversary! This is a placeholder for your heartfelt message.
+          Replace this text with whatever you want to say.<br /><br />
+          Every moment with you is my favorite moment.<br /><br />
+          Love always,<br />
+          [Your Name]
+        </p>
+        <button id="close-btn">&#10084;</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
