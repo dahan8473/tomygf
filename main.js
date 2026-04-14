@@ -84,6 +84,7 @@ const LIVES = [
     bgPulse: '#1a1008',
     flash: 'rgba(255, 180, 50, 0.5)',
     dark: true,
+    rightFixed: true,
     letter: `Dear Alice,<br><br>
       My love for you is like a moth to a flame.<br><br>
       Happy 1 Year Anniversary!!<br><br>
@@ -114,7 +115,7 @@ const LIVES = [
     bgImage: '/assets/volcano.jpg',
     flash: 'rgba(255, 100, 30, 0.5)',
     letter: `Dear Alice,<br><br>
-      Maybe you've forgotten me, but we loved each other a million years ago.<br><br>
+      Maybe you've forgotten me, but we loved each other millions of years ago.<br><br>
       Happy 1 Year Anniversary!!<br><br>
       From David`,
   },
@@ -201,6 +202,14 @@ function loadLife(life) {
   charLeft.removeAttribute('data-initialized')
   charRight.removeAttribute('data-initialized')
 
+  // Fixed right character (candle): center-right, no cursor change
+  if (life.rightFixed) {
+    charRight.style.cursor = 'default'
+    charRight.style.right = '30%'
+  } else {
+    charRight.style.cursor = 'grab'
+  }
+
   // Fade in
   document.getElementById('stage').classList.add('fade-in')
   lifeLabel.classList.add('fade-in')
@@ -209,9 +218,11 @@ function loadLife(life) {
     lifeLabel.classList.remove('fade-in')
   }, 600)
 
-  // Make draggable
+  // Make draggable (candle stays fixed in moth life)
   makeDraggable(charLeft)
-  makeDraggable(charRight)
+  if (!life.rightFixed) {
+    makeDraggable(charRight)
+  }
 }
 
 function getEmoji() {
