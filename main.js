@@ -119,6 +119,21 @@ const LIVES = [
       Happy 1 Year Anniversary!!<br><br>
       From David`,
   },
+  {
+    left: '/assets/h1.png',
+    right: '/assets/h2.png',
+    label: 'Life #33',
+    era: 'Somewhere on a Mountain',
+    emojis: ['🪨', '⛰️', '❤️', '💕', '🏔️', '🌿', '💛', '🫶', '🐾', '☁️'],
+    bg: '#e8ebe5',
+    bgPulse: '#dce0d8',
+    bgImage: '/assets/mountain.jpg',
+    flash: 'rgba(150, 180, 150, 0.4)',
+    letter: `Dear Alice,<br><br>
+      We were 2 things on a mountain at some point, u just forgot...<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
+  },
 ]
 
 let currentLifeIndex = -1
@@ -239,6 +254,9 @@ function makeDraggable(el) {
   let isDragging = false
   let offsetX = 0
   let offsetY = 0
+  let startX = 0
+  let startY = 0
+  let hasMoved = false
 
   function initPosition() {
     if (el.dataset.initialized) return
@@ -254,6 +272,9 @@ function makeDraggable(el) {
   function onPointerDown(e) {
     initPosition()
     isDragging = true
+    hasMoved = false
+    startX = e.clientX
+    startY = e.clientY
     el.classList.add('dragging')
     el.setPointerCapture(e.pointerId)
 
@@ -269,11 +290,19 @@ function makeDraggable(el) {
     el.style.left = (e.clientX - offsetX) + 'px'
     el.style.top = (e.clientY - offsetY) + 'px'
 
+    // Only check proximity after user has actually dragged
+    if (!hasMoved) {
+      const moved = Math.hypot(e.clientX - startX, e.clientY - startY)
+      if (moved < 15) return
+      hasMoved = true
+    }
+
     checkProximity()
   }
 
   function onPointerUp() {
     isDragging = false
+    hasMoved = false
     el.classList.remove('dragging')
   }
 
