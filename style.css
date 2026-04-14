@@ -303,8 +303,9 @@ body.love-mode {
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 8vh;
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(8px);
   z-index: 100;
@@ -326,81 +327,105 @@ body.has-bg-image #letter-overlay {
 /* Envelope container */
 #envelope {
   position: relative;
-  width: 380px;
-  max-width: 88vw;
-  animation: envelopeDrop 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 420px;
+  max-width: 92vw;
 }
 
-@keyframes envelopeDrop {
+/* ---- SEALED ENVELOPE ---- */
+#envelope-front {
+  text-align: center;
+  animation: slideFromBottom 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideFromBottom {
   0% {
-    transform: translateY(-40px) scale(0.9);
+    transform: translateY(100vh);
     opacity: 0;
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }
 
-/* Envelope front (sealed) */
-#envelope-front {
-  background: linear-gradient(145deg, #fff5f0, #ffeae3);
-  border: 1px solid rgba(231, 76, 111, 0.15);
-  border-radius: 20px;
-  padding: 52px 36px 44px;
-  text-align: center;
+#envelope-body {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(160deg, #f5e6d0, #e8d4bc);
+  border-radius: 8px 8px 12px 12px;
   box-shadow:
-    0 4px 24px rgba(180, 60, 80, 0.08),
-    0 20px 60px rgba(180, 60, 80, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 8px 32px rgba(120, 80, 40, 0.15),
+    0 2px 8px rgba(120, 80, 40, 0.1),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.04);
+  overflow: visible;
+}
+
+/* Envelope flap (triangle) */
+#envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-left: 210px solid transparent;
+  border-right: 210px solid transparent;
+  border-top: 110px solid #dcc5a8;
+  transform-origin: top center;
+  z-index: 2;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.06));
 }
 
 /* Wax seal */
 #wax-seal {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 28px;
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   background: radial-gradient(circle at 35% 35%, #f05575, #c1344e);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
   box-shadow:
-    0 4px 16px rgba(193, 52, 78, 0.35),
+    0 4px 16px rgba(193, 52, 78, 0.4),
     inset 0 2px 4px rgba(255, 255, 255, 0.2),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
   animation: sealPulse 2s ease-in-out infinite;
 }
 
 #seal-heart {
-  font-size: 28px;
+  font-size: 24px;
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes sealPulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(193, 52, 78, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.15); }
-  50% { transform: scale(1.06); box-shadow: 0 6px 24px rgba(193, 52, 78, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.2), inset 0 -2px 4px rgba(0, 0, 0, 0.15); }
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.08); }
 }
 
 #envelope-label {
   font-family: 'Great Vibes', cursive;
-  font-size: 22px;
-  color: #c1344e;
-  margin-bottom: 28px;
-  opacity: 0.85;
+  font-size: 26px;
+  color: #9a6a4a;
+  margin: 36px 0 24px;
+  opacity: 0.9;
 }
 
 #open-btn {
   background: linear-gradient(135deg, #e74c6f, #d63d5e);
   color: white;
   border: none;
-  padding: 14px 44px;
+  padding: 14px 52px;
   border-radius: 28px;
-  font-size: 15px;
+  font-size: 16px;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -414,68 +439,119 @@ body.has-bg-image #letter-overlay {
 
 #open-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(231, 76, 111, 0.3);
 }
 
-/* Letter content (opened) */
-#letter-content {
-  animation: letterReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+/* ---- OPENING ANIMATION ---- */
+#envelope-opening {
+  text-align: center;
 }
 
-#letter-content.hidden {
+#envelope-opening.hidden {
   display: none;
 }
 
-@keyframes letterReveal {
-  0% {
-    transform: translateY(20px) scale(0.95);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
+#opening-body {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(160deg, #f5e6d0, #e8d4bc);
+  border-radius: 8px 8px 12px 12px;
+  box-shadow:
+    0 8px 32px rgba(120, 80, 40, 0.15),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.04);
+  overflow: visible;
 }
 
-/* Paper effect */
+/* Flap opens upward */
+#opening-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-left: 210px solid transparent;
+  border-right: 210px solid transparent;
+  border-top: 110px solid #dcc5a8;
+  transform-origin: top center;
+  z-index: 2;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.06));
+}
+
+#envelope-opening.flap-open #opening-flap {
+  transform: rotateX(180deg);
+}
+
+/* Letter rising out of envelope */
+#letter-rising {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 90%;
+  z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+
+#envelope-opening.revealed #letter-rising {
+  transform: translateX(-50%) translateY(-280px);
+}
+
+/* Paper with folds */
 #letter-paper {
-  background: linear-gradient(180deg, #fffbf5 0%, #fff7ee 100%);
-  border-radius: 16px;
-  padding: 44px 32px;
-  max-height: 65vh;
-  overflow-y: auto;
+  background: linear-gradient(180deg, #fffbf3 0%, #fff6eb 100%);
+  border-radius: 4px;
   position: relative;
   box-shadow:
-    0 2px 20px rgba(180, 120, 80, 0.08),
-    0 12px 48px rgba(180, 120, 80, 0.06),
-    inset 0 0 80px rgba(255, 240, 220, 0.4);
+    0 2px 20px rgba(180, 120, 80, 0.1),
+    0 12px 48px rgba(180, 120, 80, 0.06);
   border: 1px solid rgba(200, 170, 130, 0.2);
+  overflow: hidden;
+}
+
+/* Fold creases */
+#letter-fold-top,
+#letter-fold-bottom {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, rgba(180, 150, 110, 0.15) 20%, rgba(180, 150, 110, 0.2) 50%, rgba(180, 150, 110, 0.15) 80%, transparent 95%);
+}
+
+#letter-fold-top {
+  margin-bottom: 0;
+}
+
+#letter-fold-bottom {
+  margin-top: 0;
+}
+
+#letter-inner {
+  padding: 40px 36px;
 }
 
 /* Decorative ornaments */
 #letter-ornament-top,
 #letter-ornament-bottom {
   text-align: center;
-  font-size: 14px;
-  color: rgba(193, 52, 78, 0.25);
-  letter-spacing: 8px;
-  margin: 0;
+  font-size: 16px;
+  color: rgba(193, 52, 78, 0.2);
+  letter-spacing: 10px;
 }
 
 #letter-ornament-top {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 #letter-ornament-bottom {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 /* Letter typography */
 #letter-text {
   font-family: 'Cormorant Garamond', serif;
   color: #3d2b2b;
-  font-size: 19px;
-  line-height: 1.9;
+  font-size: 24px;
+  line-height: 2;
   text-align: center;
   font-style: italic;
   font-weight: 400;
@@ -484,23 +560,29 @@ body.has-bg-image #letter-overlay {
 /* Next life button */
 #next-life-btn {
   display: block;
-  margin: 20px auto 0;
+  margin: 24px auto 0;
   background: none;
-  color: #c1344e;
-  border: 1.5px solid rgba(193, 52, 78, 0.3);
-  padding: 10px 28px;
+  color: #9a6a4a;
+  border: 1.5px solid rgba(154, 106, 74, 0.3);
+  padding: 12px 32px;
   border-radius: 28px;
-  font-size: 14px;
+  font-size: 15px;
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.25s ease;
+  opacity: 0;
+  animation: fadeInBtn 0.5s ease 1.2s forwards;
+}
+
+@keyframes fadeInBtn {
+  to { opacity: 1; }
 }
 
 #next-life-btn:hover {
-  background: rgba(193, 52, 78, 0.06);
-  border-color: rgba(193, 52, 78, 0.5);
+  background: rgba(154, 106, 74, 0.06);
+  border-color: rgba(154, 106, 74, 0.5);
   transform: translateY(-1px);
 }
 
@@ -508,15 +590,40 @@ body.has-bg-image #letter-overlay {
   transform: translateY(0);
 }
 
-/* Dark mode letter adjustments */
+/* ---- DARK / IMAGE BG VARIANTS ---- */
+body.dark-life #envelope-body,
+body.dark-life #opening-body,
+body.has-bg-image #envelope-body,
+body.has-bg-image #opening-body {
+  background: linear-gradient(160deg, #3a3028, #2e261e);
+}
+
+body.dark-life #envelope-flap,
+body.dark-life #opening-flap,
+body.has-bg-image #envelope-flap,
+body.has-bg-image #opening-flap {
+  border-top-color: #33291f;
+}
+
+body.dark-life #envelope-label,
+body.has-bg-image #envelope-label {
+  color: #c9a87c;
+}
+
 body.dark-life #letter-paper,
 body.has-bg-image #letter-paper {
   background: linear-gradient(180deg, #1e1a16 0%, #1a1612 100%);
   border-color: rgba(255, 200, 150, 0.1);
   box-shadow:
     0 2px 20px rgba(0, 0, 0, 0.3),
-    0 12px 48px rgba(0, 0, 0, 0.2),
-    inset 0 0 80px rgba(40, 30, 20, 0.4);
+    0 12px 48px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-life #letter-fold-top,
+body.dark-life #letter-fold-bottom,
+body.has-bg-image #letter-fold-top,
+body.has-bg-image #letter-fold-bottom {
+  background: linear-gradient(90deg, transparent 5%, rgba(255, 200, 150, 0.08) 20%, rgba(255, 200, 150, 0.1) 50%, rgba(255, 200, 150, 0.08) 80%, transparent 95%);
 }
 
 body.dark-life #letter-text,
@@ -528,19 +635,19 @@ body.dark-life #letter-ornament-top,
 body.dark-life #letter-ornament-bottom,
 body.has-bg-image #letter-ornament-top,
 body.has-bg-image #letter-ornament-bottom {
-  color: rgba(255, 180, 120, 0.2);
+  color: rgba(255, 180, 120, 0.15);
 }
 
 body.dark-life #next-life-btn,
 body.has-bg-image #next-life-btn {
-  color: #e8a87c;
-  border-color: rgba(232, 168, 124, 0.3);
+  color: #c9a87c;
+  border-color: rgba(201, 168, 124, 0.3);
 }
 
 body.dark-life #next-life-btn:hover,
 body.has-bg-image #next-life-btn:hover {
-  background: rgba(232, 168, 124, 0.08);
-  border-color: rgba(232, 168, 124, 0.5);
+  background: rgba(201, 168, 124, 0.08);
+  border-color: rgba(201, 168, 124, 0.5);
 }
 
 /* Hint text */
