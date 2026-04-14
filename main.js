@@ -7,9 +7,13 @@ const letterContent = document.getElementById('letter-content')
 const openBtn = document.getElementById('open-btn')
 const closeBtn = document.getElementById('close-btn')
 
-const PROXIMITY_THRESHOLD = 150
+const PROXIMITY_THRESHOLD = 160
+const HEART_EMOJIS = ['❤️', '💕', '💗', '💖', '💘', '💝', '💞', '🩷', '😘', '🥰']
+
 let heartInterval = null
 let letterShown = false
+let hasExploded = false
+let isClose = false
 
 // --- Drag & Drop ---
 
@@ -17,25 +21,16 @@ function makeDraggable(el) {
   let isDragging = false
   let offsetX = 0
   let offsetY = 0
-  let currentX = 0
-  let currentY = 0
-  let startLeft = 0
-  let startTop = 0
   let initialized = false
 
   function initPosition() {
     if (initialized) return
     const rect = el.getBoundingClientRect()
-    startLeft = rect.left
-    startTop = rect.top
-    // Remove CSS positioning and use transform
     el.style.position = 'fixed'
-    el.style.left = startLeft + 'px'
-    el.style.top = startTop + 'px'
+    el.style.left = rect.left + 'px'
+    el.style.top = rect.top + 'px'
     el.style.right = 'auto'
-    el.style.transform = el.id === 'pucca' ? 'scaleX(-1)' : 'none'
-    currentX = 0
-    currentY = 0
+    el.style.transform = el.id === 'garu' ? 'scaleX(-1)' : 'none'
     initialized = true
   }
 
@@ -54,11 +49,8 @@ function makeDraggable(el) {
     if (!isDragging) return
     e.preventDefault()
 
-    const newLeft = e.clientX - offsetX
-    const newTop = e.clientY - offsetY
-
-    el.style.left = newLeft + 'px'
-    el.style.top = newTop + 'px'
+    el.style.left = (e.clientX - offsetX) + 'px'
+    el.style.top = (e.clientY - offsetY) + 'px'
 
     checkProximity()
   }
@@ -93,61 +85,137 @@ function checkProximity() {
   const dist = Math.hypot(p.x - g.x, p.y - g.y)
 
   if (dist < PROXIMITY_THRESHOLD) {
-    if (!heartInterval) {
-      startHearts(p, g)
-    }
-    if (!letterShown) {
-      letterShown = true
-      showLetter()
+    if (!isClose) {
+      isClose = true
+      onCharactersMeet(p, g)
     }
   } else {
-    stopHearts()
+    if (isClose) {
+      isClose = false
+      onCharactersSeparate()
+    }
   }
 }
 
-// --- Heart Particles ---
+function onCharactersMeet(p, g) {
+  // Wiggle characters
+  pucca.classList.add('excited')
+  garu.classList.add('excited')
+  document.body.classList.add('love-mode')
 
-function spawnHeart(cx, cy) {
-  const heart = document.createElement('div')
-  heart.className = 'heart'
-  heart.textContent = ['❤️', '💕', '💗', '💖', '💘'][Math.floor(Math.random() * 5)]
-
-  const spread = 80
-  const x = cx + (Math.random() - 0.5) * spread
-  const y = cy + (Math.random() - 0.5) * spread * 0.5
-
-  heart.style.left = x + 'px'
-  heart.style.top = y + 'px'
-  heart.style.fontSize = (18 + Math.random() * 16) + 'px'
-
-  heartsContainer.appendChild(heart)
-
-  heart.addEventListener('animationend', () => heart.remove())
-}
-
-function startHearts(p, g) {
+  // Massive heart explosion
   const cx = (p.x + g.x) / 2
   const cy = (p.y + g.y) / 2
+  explodeHearts(cx, cy)
+  screenFlash()
 
-  // Initial burst
-  for (let i = 0; i < 12; i++) {
-    setTimeout(() => spawnHeart(cx, cy), i * 60)
-  }
-
-  // Continuous hearts
+  // Continuous floating hearts
   heartInterval = setInterval(() => {
     const pp = getCenter(pucca)
     const gg = getCenter(garu)
     const mx = (pp.x + gg.x) / 2
     const my = (pp.y + gg.y) / 2
-    spawnHeart(mx, my)
-  }, 250)
+    spawnHeart(mx, my, 'float')
+    if (Math.random() > 0.6) spawnHeart(mx, my, 'float')
+  }, 150)
+
+  // Heart rain from top of screen
+  startHeartRain()
+
+  // Show letter after a beat
+  if (!letterShown) {
+    letterShown = true
+    setTimeout(() => showLetter(), 1200)
+  }
+}
+
+function onCharactersSeparate() {
+  pucca.classList.remove('excited')
+  garu.classList.remove('excited')
+  document.body.classList.remove('love-mode')
+  stopHearts()
+}
+
+// --- Heart Explosion ---
+
+function explodeHearts(cx, cy) {
+  const count = 40
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const heart = document.createElement('div')
+      heart.className = 'heart explode'
+
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5
+      const distance = 80 + Math.random() * 180
+      const dx = Math.cos(angle) * distance
+      const dy = Math.sin(angle) * distance
+      const rot = (Math.random() - 0.5) * 360
+
+      heart.style.setProperty('--dx', dx + 'px')
+      heart.style.setProperty('--dy', dy + 'px')
+      heart.style.setProperty('--rot', rot + 'deg')
+      heart.style.left = cx + 'px'
+      heart.style.top = cy + 'px'
+      heart.style.fontSize = (20 + Math.random() * 28) + 'px'
+      heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+
+      heartsContainer.appendChild(heart)
+      heart.addEventListener('animationend', () => heart.remove())
+    }, i * 25)
+  }
+}
+
+function screenFlash() {
+  const flash = document.createElement('div')
+  flash.className = 'screen-flash'
+  document.body.appendChild(flash)
+  flash.addEventListener('animationend', () => flash.remove())
+}
+
+// --- Floating Hearts ---
+
+function spawnHeart(cx, cy, type) {
+  const heart = document.createElement('div')
+  heart.className = 'heart ' + type
+  heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+
+  const spread = 100
+  heart.style.left = (cx + (Math.random() - 0.5) * spread) + 'px'
+  heart.style.top = (cy + (Math.random() - 0.5) * spread * 0.4) + 'px'
+  heart.style.fontSize = (16 + Math.random() * 20) + 'px'
+
+  heartsContainer.appendChild(heart)
+  heart.addEventListener('animationend', () => heart.remove())
+}
+
+// --- Heart Rain ---
+
+let rainInterval = null
+
+function startHeartRain() {
+  if (rainInterval) return
+  rainInterval = setInterval(() => {
+    if (!isClose) return
+    const heart = document.createElement('div')
+    heart.className = 'heart rain'
+    heart.textContent = HEART_EMOJIS[Math.floor(Math.random() * HEART_EMOJIS.length)]
+    heart.style.left = (Math.random() * window.innerWidth) + 'px'
+    heart.style.top = '-30px'
+    heart.style.fontSize = (14 + Math.random() * 24) + 'px'
+    heart.style.setProperty('--rot', (Math.random() * 360) + 'deg')
+    heartsContainer.appendChild(heart)
+    heart.addEventListener('animationend', () => heart.remove())
+  }, 120)
 }
 
 function stopHearts() {
   if (heartInterval) {
     clearInterval(heartInterval)
     heartInterval = null
+  }
+  if (rainInterval) {
+    clearInterval(rainInterval)
+    rainInterval = null
   }
 }
 
@@ -176,7 +244,6 @@ hint.className = 'hint'
 hint.textContent = 'drag them together'
 document.body.appendChild(hint)
 
-// Fade hint after first drag
 let hintDismissed = false
 document.addEventListener('pointerdown', () => {
   if (!hintDismissed) {
