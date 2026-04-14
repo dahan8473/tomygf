@@ -30,7 +30,7 @@ function makeDraggable(el) {
     el.style.left = rect.left + 'px'
     el.style.top = rect.top + 'px'
     el.style.right = 'auto'
-    el.style.transform = el.id === 'garu' ? 'scaleX(-1)' : 'none'
+    el.style.transform = 'none'
     initialized = true
   }
 

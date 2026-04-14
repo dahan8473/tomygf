@@ -57,7 +57,7 @@ html, body {
 #garu {
   top: 50%;
   right: 15%;
-  transform: translateY(-50%) scaleX(-1);
+  transform: translateY(-50%);
   animation-delay: 0.8s;
 }
 
