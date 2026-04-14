@@ -1,19 +1,178 @@
-const pucca = document.getElementById('pucca')
-const garu = document.getElementById('garu')
+const charLeft = document.getElementById('char-left')
+const charRight = document.getElementById('char-right')
 const heartsContainer = document.getElementById('hearts-container')
 const letterOverlay = document.getElementById('letter-overlay')
 const envelopeFront = document.getElementById('envelope-front')
 const letterContent = document.getElementById('letter-content')
 const openBtn = document.getElementById('open-btn')
-const closeBtn = document.getElementById('close-btn')
+const nextLifeBtn = document.getElementById('next-life-btn')
+const lifeLabel = document.getElementById('life-label')
+const titleEl = document.getElementById('title')
 
 const PROXIMITY_THRESHOLD = 160
 const HEART_EMOJIS = ['❤️', '💕', '💗', '💖', '💘', '💝', '💞', '🩷', '😘', '🥰']
 
+// --- Lives ---
+
+const LIVES = [
+  {
+    left: '/assets/pucca.png',
+    right: '/assets/garu.png',
+    label: 'This Life',
+    era: 'Now',
+    type: 'image',
+  },
+  {
+    left: '🤴',
+    right: '👸',
+    label: 'Life #217',
+    era: 'Medieval England, 1342',
+    type: 'emoji',
+  },
+  {
+    left: '🧑‍🚀',
+    right: '👩‍🚀',
+    label: 'Life #4,081',
+    era: 'Mars Colony, 3047',
+    type: 'emoji',
+  },
+  {
+    left: '🦊',
+    right: '🐰',
+    label: 'Life #12',
+    era: 'The Enchanted Forest',
+    type: 'emoji',
+  },
+  {
+    left: '🧜‍♂️',
+    right: '🧜‍♀️',
+    label: 'Life #889',
+    era: 'Under the Sea, 10000 BC',
+    type: 'emoji',
+  },
+  {
+    left: '🤠',
+    right: '💃',
+    label: 'Life #1,203',
+    era: 'Wild West, 1885',
+    type: 'emoji',
+  },
+  {
+    left: '🧛',
+    right: '🧛‍♀️',
+    label: 'Life #∞',
+    era: 'Eternal Night, Transylvania',
+    type: 'emoji',
+  },
+  {
+    left: '👨‍🎨',
+    right: '🩰',
+    label: 'Life #621',
+    era: 'Renaissance Florence, 1503',
+    type: 'emoji',
+  },
+  {
+    left: '⛩️',
+    right: '🌸',
+    label: 'Life #77',
+    era: 'Kyoto, 794',
+    type: 'emoji',
+  },
+  {
+    left: '🐧',
+    right: '🐧',
+    label: 'Life #3',
+    era: 'Antarctica, Ice Age',
+    type: 'emoji',
+  },
+  {
+    left: '☀️',
+    right: '🌙',
+    label: 'Life #1',
+    era: 'The Beginning of Time',
+    type: 'emoji',
+  },
+  {
+    left: '🏴‍☠️',
+    right: '🧜‍♀️',
+    label: 'Life #505',
+    era: 'Caribbean Sea, 1715',
+    type: 'emoji',
+  },
+]
+
+let currentLifeIndex = -1
 let heartInterval = null
 let letterShown = false
-let hasExploded = false
 let isClose = false
+let rainInterval = null
+let dragCleanups = []
+
+// --- Life Management ---
+
+function pickRandomLife() {
+  let idx
+  do {
+    idx = Math.floor(Math.random() * LIVES.length)
+  } while (idx === currentLifeIndex && LIVES.length > 1)
+  currentLifeIndex = idx
+  return LIVES[idx]
+}
+
+function loadLife(life) {
+  // Reset state
+  stopHearts()
+  isClose = false
+  letterShown = false
+  letterOverlay.classList.add('hidden')
+  heartsContainer.innerHTML = ''
+  document.body.classList.remove('love-mode')
+  charLeft.classList.remove('excited')
+  charRight.classList.remove('excited')
+
+  // Clean up old drag listeners
+  dragCleanups.forEach(fn => fn())
+  dragCleanups = []
+
+  // Set characters
+  if (life.type === 'image') {
+    charLeft.innerHTML = `<img src="${life.left}" alt="Left" draggable="false" />`
+    charRight.innerHTML = `<img src="${life.right}" alt="Right" draggable="false" />`
+    charLeft.classList.add('img-char')
+    charRight.classList.add('img-char')
+    charLeft.classList.remove('emoji-char')
+    charRight.classList.remove('emoji-char')
+  } else {
+    charLeft.textContent = life.left
+    charRight.textContent = life.right
+    charLeft.classList.add('emoji-char')
+    charRight.classList.add('emoji-char')
+    charLeft.classList.remove('img-char')
+    charRight.classList.remove('img-char')
+  }
+
+  // Set label
+  lifeLabel.textContent = life.label
+  lifeLabel.dataset.era = life.era
+
+  // Reset positions
+  charLeft.style.cssText = ''
+  charRight.style.cssText = ''
+  charLeft.removeAttribute('data-initialized')
+  charRight.removeAttribute('data-initialized')
+
+  // Fade in
+  document.getElementById('stage').classList.add('fade-in')
+  lifeLabel.classList.add('fade-in')
+  setTimeout(() => {
+    document.getElementById('stage').classList.remove('fade-in')
+    lifeLabel.classList.remove('fade-in')
+  }, 600)
+
+  // Make draggable
+  makeDraggable(charLeft)
+  makeDraggable(charRight)
+}
 
 // --- Drag & Drop ---
 
@@ -21,17 +180,16 @@ function makeDraggable(el) {
   let isDragging = false
   let offsetX = 0
   let offsetY = 0
-  let initialized = false
 
   function initPosition() {
-    if (initialized) return
+    if (el.dataset.initialized) return
     const rect = el.getBoundingClientRect()
     el.style.position = 'fixed'
     el.style.left = rect.left + 'px'
     el.style.top = rect.top + 'px'
     el.style.right = 'auto'
-    el.style.transform = 'none'
-    initialized = true
+    el.style.bottom = 'auto'
+    el.dataset.initialized = '1'
   }
 
   function onPointerDown(e) {
@@ -64,10 +222,14 @@ function makeDraggable(el) {
   el.addEventListener('pointermove', onPointerMove)
   el.addEventListener('pointerup', onPointerUp)
   el.addEventListener('pointercancel', onPointerUp)
-}
 
-makeDraggable(pucca)
-makeDraggable(garu)
+  dragCleanups.push(() => {
+    el.removeEventListener('pointerdown', onPointerDown)
+    el.removeEventListener('pointermove', onPointerMove)
+    el.removeEventListener('pointerup', onPointerUp)
+    el.removeEventListener('pointercancel', onPointerUp)
+  })
+}
 
 // --- Proximity Detection ---
 
@@ -80,8 +242,8 @@ function getCenter(el) {
 }
 
 function checkProximity() {
-  const p = getCenter(pucca)
-  const g = getCenter(garu)
+  const p = getCenter(charLeft)
+  const g = getCenter(charRight)
   const dist = Math.hypot(p.x - g.x, p.y - g.y)
 
   if (dist < PROXIMITY_THRESHOLD) {
@@ -98,31 +260,26 @@ function checkProximity() {
 }
 
 function onCharactersMeet(p, g) {
-  // Wiggle characters
-  pucca.classList.add('excited')
-  garu.classList.add('excited')
+  charLeft.classList.add('excited')
+  charRight.classList.add('excited')
   document.body.classList.add('love-mode')
 
-  // Massive heart explosion
   const cx = (p.x + g.x) / 2
   const cy = (p.y + g.y) / 2
   explodeHearts(cx, cy)
   screenFlash()
 
-  // Continuous floating hearts
   heartInterval = setInterval(() => {
-    const pp = getCenter(pucca)
-    const gg = getCenter(garu)
+    const pp = getCenter(charLeft)
+    const gg = getCenter(charRight)
     const mx = (pp.x + gg.x) / 2
     const my = (pp.y + gg.y) / 2
     spawnHeart(mx, my, 'float')
     if (Math.random() > 0.6) spawnHeart(mx, my, 'float')
   }, 150)
 
-  // Heart rain from top of screen
   startHeartRain()
 
-  // Show letter after a beat
   if (!letterShown) {
     letterShown = true
     setTimeout(() => showLetter(), 1200)
@@ -130,8 +287,8 @@ function onCharactersMeet(p, g) {
 }
 
 function onCharactersSeparate() {
-  pucca.classList.remove('excited')
-  garu.classList.remove('excited')
+  charLeft.classList.remove('excited')
+  charRight.classList.remove('excited')
   document.body.classList.remove('love-mode')
   stopHearts()
 }
@@ -190,8 +347,6 @@ function spawnHeart(cx, cy, type) {
 
 // --- Heart Rain ---
 
-let rainInterval = null
-
 function startHeartRain() {
   if (rainInterval) return
   rainInterval = setInterval(() => {
@@ -232,9 +387,15 @@ openBtn.addEventListener('click', () => {
   letterContent.classList.remove('hidden')
 })
 
-closeBtn.addEventListener('click', () => {
+nextLifeBtn.addEventListener('click', () => {
   letterOverlay.classList.add('hidden')
-  letterShown = false
+  stopHearts()
+  // Fade out, switch life, fade in
+  document.getElementById('stage').style.opacity = '0'
+  setTimeout(() => {
+    loadLife(pickRandomLife())
+    document.getElementById('stage').style.opacity = '1'
+  }, 400)
 })
 
 // --- Hint ---
@@ -251,3 +412,7 @@ document.addEventListener('pointerdown', () => {
     setTimeout(() => { hint.style.opacity = '0' }, 1500)
   }
 })
+
+// --- Init ---
+
+loadLife(pickRandomLife())
