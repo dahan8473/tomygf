@@ -128,6 +128,7 @@ let letterShown = false
 let isClose = false
 let rainInterval = null
 let dragCleanups = []
+let proximityReady = false
 
 // --- Life Management ---
 
@@ -210,13 +211,15 @@ function loadLife(life) {
     charRight.style.cursor = 'grab'
   }
 
-  // Fade in
+  // Fade in, delay proximity checking
+  proximityReady = false
   document.getElementById('stage').classList.add('fade-in')
   lifeLabel.classList.add('fade-in')
   setTimeout(() => {
     document.getElementById('stage').classList.remove('fade-in')
     lifeLabel.classList.remove('fade-in')
-  }, 600)
+    proximityReady = true
+  }, 800)
 
   // Make draggable (candle stays fixed in moth life)
   makeDraggable(charLeft)
@@ -298,6 +301,8 @@ function getCenter(el) {
 }
 
 function checkProximity() {
+  if (!proximityReady) return
+
   const p = getCenter(charLeft)
   const g = getCenter(charRight)
   const dist = Math.hypot(p.x - g.x, p.y - g.y)
