@@ -5,7 +5,7 @@ const letterOverlay = document.getElementById('letter-overlay')
 const envelopeFront = document.getElementById('envelope-front')
 const openBtn = document.getElementById('open-btn')
 const nextLifeBtn = document.getElementById('next-life-btn')
-const envelopeOpening = document.getElementById('envelope-opening')
+const letterContent = document.getElementById('letter-content')
 const lifeLabel = document.getElementById('life-label')
 const letterText = document.getElementById('letter-text')
 
@@ -164,8 +164,7 @@ function loadLife(life) {
   isClose = false
   letterShown = false
   letterOverlay.classList.add('hidden')
-  envelopeOpening.classList.add('hidden')
-  envelopeOpening.classList.remove('flap-open', 'revealed')
+  letterContent.classList.add('hidden')
   heartsContainer.innerHTML = ''
   charLeft.classList.remove('excited')
   charRight.classList.remove('excited')
@@ -479,27 +478,22 @@ function stopHearts() {
 function showLetter() {
   letterOverlay.classList.remove('hidden')
   envelopeFront.style.display = 'block'
-  envelopeOpening.classList.add('hidden')
+  envelopeFront.classList.remove('opening')
+  letterContent.classList.add('hidden')
 }
 
 openBtn.addEventListener('click', () => {
-  // Hide sealed envelope, show opening animation
-  envelopeFront.style.display = 'none'
-  envelopeOpening.classList.remove('hidden')
-  envelopeOpening.classList.remove('revealed')
-
-  // Trigger flap open, then letter rises
-  requestAnimationFrame(() => {
-    envelopeOpening.classList.add('flap-open')
-    setTimeout(() => {
-      envelopeOpening.classList.add('revealed')
-    }, 600)
-  })
+  // Flap opens, then cross-fade to letter
+  envelopeFront.classList.add('opening')
+  setTimeout(() => {
+    envelopeFront.style.display = 'none'
+    letterContent.classList.remove('hidden')
+  }, 800)
 })
 
 nextLifeBtn.addEventListener('click', () => {
   letterOverlay.classList.add('hidden')
-  envelopeOpening.classList.remove('flap-open', 'revealed')
+  letterContent.classList.add('hidden')
   stopHearts()
   document.getElementById('stage').style.opacity = '0'
   setTimeout(() => {

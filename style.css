@@ -440,73 +440,40 @@ body.has-bg-image #letter-overlay {
   transform: translateY(0);
 }
 
-/* ---- OPENING ANIMATION ---- */
-#envelope-opening {
-  text-align: center;
+/* Envelope flap opening animation */
+#envelope-front.opening #envelope-flap {
+  transform: rotateX(180deg);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-#envelope-opening.hidden {
+#envelope-front.opening {
+  animation: envelopeFadeOut 0.8s ease forwards;
+}
+
+@keyframes envelopeFadeOut {
+  0%, 60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Letter content (after opening) */
+#letter-content {
+  text-align: center;
+  animation: letterSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#letter-content.hidden {
   display: none;
 }
 
-#opening-body {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(160deg, #f5e6d0, #e8d4bc);
-  border-radius: 8px 8px 12px 12px;
-  box-shadow:
-    0 8px 32px rgba(120, 80, 40, 0.15),
-    inset 0 -4px 12px rgba(0, 0, 0, 0.04);
-  overflow: visible;
-  z-index: 5;
-}
-
-/* Flap opens upward */
-#opening-flap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 0;
-  border-left: 210px solid transparent;
-  border-right: 210px solid transparent;
-  border-top: 110px solid #dcc5a8;
-  transform-origin: top center;
-  z-index: 2;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.06));
-}
-
-#envelope-opening.flap-open #opening-flap {
-  transform: rotateX(180deg);
-}
-
-/* Letter rising out of envelope */
-#letter-rising {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(0);
-  width: 90%;
-  z-index: 1;
-  opacity: 0;
-  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s,
-              opacity 0.3s ease 0.3s;
-}
-
-#envelope-opening.flap-open #letter-rising {
-  opacity: 1;
-}
-
-#envelope-opening.revealed #letter-rising {
-  transform: translateX(-50%) translateY(-240px);
-  opacity: 1;
-}
-
-#envelope-opening.revealed #opening-body {
-  opacity: 0;
-  transition: opacity 0.3s ease 0.8s;
+@keyframes letterSlideUp {
+  0% {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Paper with folds */
