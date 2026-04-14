@@ -66,6 +66,22 @@ const LIVES = [
       Bork bork,<br>
       [Your Name]`,
   },
+  {
+    left: '/assets/cat1.png',
+    right: '/assets/cat2.png',
+    label: 'Life #42',
+    era: 'If We Were Cats',
+    emojis: ['🐱', '🐾', '🌹', '💐', '❤️', '😻', '🐈', '💕', '🥀', '😽'],
+    bg: '#fff8f0',
+    bgPulse: '#ffe8d6',
+    flash: 'rgba(255, 180, 100, 0.4)',
+    letter: `Dear [Name],<br><br>
+      In this life I brought you flowers.<br>
+      You reached out for me anyway.<br><br>
+      Even as cats, I'd choose you over the red dot. Every time.<br><br>
+      Meow always,<br>
+      [Your Name]`,
+  },
 ]
 
 let currentLifeIndex = -1
