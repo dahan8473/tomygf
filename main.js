@@ -103,6 +103,21 @@ const LIVES = [
       Happy 1 Year Anniversary!!<br><br>
       From David`,
   },
+  {
+    left: '/assets/dino1.png',
+    right: '/assets/dino2.png',
+    label: 'Life #0',
+    era: '65 Million Years Ago',
+    emojis: ['🦕', '🌋', '🔥', '❤️', '💕', '☄️', '🦖', '🌿', '💛', '🫶'],
+    bg: '#2a2018',
+    bgPulse: '#3a2820',
+    bgImage: '/assets/volcano.jpg',
+    flash: 'rgba(255, 100, 30, 0.5)',
+    letter: `Dear Alice,<br><br>
+      Maybe you've forgotten me, but we loved each other a million years ago.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
+  },
 ]
 
 let currentLifeIndex = -1
@@ -154,6 +169,17 @@ function loadLife(life) {
   document.documentElement.style.setProperty('--bg', life.bg)
   document.documentElement.style.setProperty('--bg-pulse', life.bgPulse)
   document.documentElement.style.setProperty('--flash-color', life.flash)
+
+  // Background image
+  if (life.bgImage) {
+    document.body.style.backgroundImage = `url(${life.bgImage})`
+    document.body.style.backgroundSize = 'cover'
+    document.body.style.backgroundPosition = 'center'
+    document.body.classList.add('has-bg-image')
+  } else {
+    document.body.style.backgroundImage = 'none'
+    document.body.classList.remove('has-bg-image')
+  }
 
   // Dark mode (moth/candle)
   if (life.dark) {

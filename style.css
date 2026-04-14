@@ -130,6 +130,27 @@ html, body {
   75% { rotate: 5deg; }
 }
 
+/* Background image lives */
+body.has-bg-image #title {
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+body.has-bg-image #life-label,
+body.has-bg-image #life-label::after {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+body.has-bg-image .hint {
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+body.has-bg-image #letter-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
 /* Dark life (moth & candle) */
 body.dark-life #title {
   color: #ffcc66;
