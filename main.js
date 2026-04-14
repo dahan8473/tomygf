@@ -20,84 +20,12 @@ const LIVES = [
     right: '/assets/garu.png',
     label: 'This Life',
     era: 'Now',
-    type: 'image',
   },
   {
-    left: '🤴',
-    right: '👸',
-    label: 'Life #217',
-    era: 'Medieval England, 1342',
-    type: 'emoji',
-  },
-  {
-    left: '🧑‍🚀',
-    right: '👩‍🚀',
-    label: 'Life #4,081',
-    era: 'Mars Colony, 3047',
-    type: 'emoji',
-  },
-  {
-    left: '🦊',
-    right: '🐰',
+    left: '/assets/dog-left.png',
+    right: '/assets/dog-right.png',
     label: 'Life #12',
-    era: 'The Enchanted Forest',
-    type: 'emoji',
-  },
-  {
-    left: '🧜‍♂️',
-    right: '🧜‍♀️',
-    label: 'Life #889',
-    era: 'Under the Sea, 10000 BC',
-    type: 'emoji',
-  },
-  {
-    left: '🤠',
-    right: '💃',
-    label: 'Life #1,203',
-    era: 'Wild West, 1885',
-    type: 'emoji',
-  },
-  {
-    left: '🧛',
-    right: '🧛‍♀️',
-    label: 'Life #∞',
-    era: 'Eternal Night, Transylvania',
-    type: 'emoji',
-  },
-  {
-    left: '👨‍🎨',
-    right: '🩰',
-    label: 'Life #621',
-    era: 'Renaissance Florence, 1503',
-    type: 'emoji',
-  },
-  {
-    left: '⛩️',
-    right: '🌸',
-    label: 'Life #77',
-    era: 'Kyoto, 794',
-    type: 'emoji',
-  },
-  {
-    left: '🐧',
-    right: '🐧',
-    label: 'Life #3',
-    era: 'Antarctica, Ice Age',
-    type: 'emoji',
-  },
-  {
-    left: '☀️',
-    right: '🌙',
-    label: 'Life #1',
-    era: 'The Beginning of Time',
-    type: 'emoji',
-  },
-  {
-    left: '🏴‍☠️',
-    right: '🧜‍♀️',
-    label: 'Life #505',
-    era: 'Caribbean Sea, 1715',
-    type: 'emoji',
+    era: 'The Goodest Timeline',
   },
 ]
 
@@ -135,21 +63,8 @@ function loadLife(life) {
   dragCleanups = []
 
   // Set characters
-  if (life.type === 'image') {
-    charLeft.innerHTML = `<img src="${life.left}" alt="Left" draggable="false" />`
-    charRight.innerHTML = `<img src="${life.right}" alt="Right" draggable="false" />`
-    charLeft.classList.add('img-char')
-    charRight.classList.add('img-char')
-    charLeft.classList.remove('emoji-char')
-    charRight.classList.remove('emoji-char')
-  } else {
-    charLeft.textContent = life.left
-    charRight.textContent = life.right
-    charLeft.classList.add('emoji-char')
-    charRight.classList.add('emoji-char')
-    charLeft.classList.remove('img-char')
-    charRight.classList.remove('img-char')
-  }
+  charLeft.innerHTML = `<img src="${life.left}" alt="Left" draggable="false" />`
+  charRight.innerHTML = `<img src="${life.right}" alt="Right" draggable="false" />`
 
   // Set label
   lifeLabel.textContent = life.label

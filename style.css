@@ -85,20 +85,15 @@ html, body {
   animation: none;
 }
 
-.character.img-char {
+.character {
   width: 150px;
   height: auto;
 }
 
-.character.img-char img {
+.character img {
   width: 100%;
   height: auto;
   pointer-events: none;
-}
-
-.character.emoji-char {
-  font-size: 100px;
-  line-height: 1;
 }
 
 /* Idle bobbing */
