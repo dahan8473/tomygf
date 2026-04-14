@@ -74,6 +74,35 @@ const LIVES = [
       Happy 1 Year Anniversary!!<br><br>
       From David`,
   },
+  {
+    left: '/assets/moth.png',
+    right: '/assets/candle.png',
+    label: 'Life #∞',
+    era: 'Moth to a Flame',
+    emojis: ['🔥', '🕯️', '✨', '💛', '🦋', '💫', '🌟', '⭐', '💥', '❤️‍🔥'],
+    bg: '#0a0a0a',
+    bgPulse: '#1a1008',
+    flash: 'rgba(255, 180, 50, 0.5)',
+    dark: true,
+    letter: `Dear Alice,<br><br>
+      My love for you is like a moth to a flame.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
+  },
+  {
+    left: '/assets/monkey1.png',
+    right: '/assets/monkey2.png',
+    label: 'Life #1,000',
+    era: 'In Every Age',
+    emojis: ['🐒', '🐵', '🍌', '❤️', '💕', '🌴', '💛', '🫶', '🥰', '🌺'],
+    bg: '#f5f0e8',
+    bgPulse: '#ede5d5',
+    flash: 'rgba(200, 180, 100, 0.4)',
+    letter: `Dear Alice,<br><br>
+      I have loved you in numberless forms, numberless times, in life after life, in age after age, forever.<br><br>
+      Happy 1 Year Anniversary!!<br><br>
+      From David`,
+  },
 ]
 
 let currentLifeIndex = -1
@@ -125,6 +154,17 @@ function loadLife(life) {
   document.documentElement.style.setProperty('--bg', life.bg)
   document.documentElement.style.setProperty('--bg-pulse', life.bgPulse)
   document.documentElement.style.setProperty('--flash-color', life.flash)
+
+  // Dark mode (moth/candle)
+  if (life.dark) {
+    document.body.classList.add('dark-life')
+    charRight.classList.add('candle-glow')
+    charLeft.classList.add('moth-dark')
+  } else {
+    document.body.classList.remove('dark-life')
+    charRight.classList.remove('candle-glow')
+    charLeft.classList.remove('moth-dark')
+  }
 
   // Set letter text
   letterText.innerHTML = life.letter
@@ -224,6 +264,13 @@ function checkProximity() {
   const p = getCenter(charLeft)
   const g = getCenter(charRight)
   const dist = Math.hypot(p.x - g.x, p.y - g.y)
+
+  // Gradual moth brightness as it approaches candle
+  if (currentLife && currentLife.dark) {
+    const maxDist = 500
+    const brightness = Math.min(1, Math.max(0.15, 1 - (dist / maxDist)))
+    charLeft.style.filter = `brightness(${brightness})`
+  }
 
   if (dist < PROXIMITY_THRESHOLD) {
     if (!isClose) {
