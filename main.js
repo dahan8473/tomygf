@@ -9,7 +9,7 @@ const nextLifeBtn = document.getElementById('next-life-btn')
 const lifeLabel = document.getElementById('life-label')
 const letterText = document.getElementById('letter-text')
 
-const PROXIMITY_THRESHOLD = Math.min(160, window.innerWidth * 0.15)
+const BASE_THRESHOLD = Math.min(160, window.innerWidth * 0.15)
 
 // --- Lives ---
 // Each life has its own images, emojis, background, and letter
@@ -335,6 +335,7 @@ function checkProximity() {
   const p = getCenter(charLeft)
   const g = getCenter(charRight)
   const dist = Math.hypot(p.x - g.x, p.y - g.y)
+  const threshold = (currentLife && currentLife.dark) ? 80 : BASE_THRESHOLD
 
   // Gradual moth brightness as it approaches candle
   if (currentLife && currentLife.dark) {
@@ -343,7 +344,7 @@ function checkProximity() {
     charLeft.style.filter = `brightness(${brightness})`
   }
 
-  if (dist < PROXIMITY_THRESHOLD) {
+  if (dist < threshold) {
     if (!isClose) {
       isClose = true
       onCharactersMeet(p, g)
